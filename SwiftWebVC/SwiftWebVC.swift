@@ -70,6 +70,7 @@ public class SwiftWebVC: UIViewController {
         var tempWebView = WKWebView(frame: UIScreen.main.bounds)
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
+        tempWebView.scrollView.delegate = self
         return tempWebView;
     }()
     
@@ -112,6 +113,10 @@ public class SwiftWebVC: UIViewController {
     
     ////////////////////////////////////////////////
     // View Lifecycle
+    
+    public override var prefersStatusBarHidden: Bool {
+        return self.navigationController?.isNavigationBarHidden ?? false
+    }
     
     override public func loadView() {
         view = webView
@@ -264,9 +269,9 @@ public class SwiftWebVC: UIViewController {
         UINavigationBar.appearance().barStyle = storedStatusColor!
         self.dismiss(animated: true, completion: nil)
     }
-
+    
     // MARK: - Class Methods
-
+    
     /// Helper function to get image within SwiftWebVCResources bundle
     ///
     /// - parameter named: The name of the image in the SwiftWebVCResources bundle
@@ -366,4 +371,12 @@ extension SwiftWebVC: WKNavigationDelegate {
             }
         }
     }
+}
+
+extension SwiftWebVC: UIScrollViewDelegate {
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
 }
