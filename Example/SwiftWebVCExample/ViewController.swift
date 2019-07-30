@@ -25,21 +25,25 @@ class ViewController: UIViewController {
         let webVC = SwiftWebVC(urlString: "https://www.google.com")
         webVC.delegate = self
         self.navigationController?.pushViewController(webVC, animated: true)
+        self.navigationController?.hidesBarsOnSwipe = true
     }
     
     // MARK: Modal
     @IBAction func presentModalWithDefaultTheme() {
         let webVC = SwiftModalWebVC(urlString: "www.google.com")
+        webVC.hidesBarsOnSwipe = true
         self.present(webVC, animated: true, completion: nil)
     }
     
     @IBAction func presentModalWithLightBlackTheme() {
         let webVC = SwiftModalWebVC(urlString: "https://www.google.com", theme: .lightBlack, dismissButtonStyle: .cross)
+        webVC.hidesBarsOnSwipe = true
         self.present(webVC, animated: true, completion: nil)
     }
     
     @IBAction func presentModalWithDarkTheme() {
         let webVC = SwiftModalWebVC(urlString: "https://www.google.com", theme: .dark, dismissButtonStyle: .arrow)
+        webVC.hidesBarsOnSwipe = true
         self.present(webVC, animated: true, completion: nil)
     }
 
