@@ -16,10 +16,10 @@ public protocol SwiftWebVCDelegate: class {
 public class SwiftWebVC: UIViewController {
     
     public weak var delegate: SwiftWebVCDelegate?
-    var storedStatusColor: UIBarStyle?
-    var buttonColor: UIColor? = nil
-    var titleColor: UIColor? = nil
-    var closing: Bool! = false
+    public var storedStatusColor: UIBarStyle?
+    public var buttonColor: UIColor? = nil
+    public var titleColor: UIColor? = nil
+    public var closing: Bool! = false
     
     lazy var backBarButtonItem: UIBarButtonItem =  {
         var tempBackBarButtonItem = UIBarButtonItem(image: SwiftWebVC.bundledImage(named: "SwiftWebVCBack"),
@@ -70,7 +70,7 @@ public class SwiftWebVC: UIViewController {
     
     var navBarTitle: UILabel!
     
-    var sharingEnabled = true
+    public var sharingEnabled = true
     
     ////////////////////////////////////////////////
     
@@ -113,10 +113,6 @@ public class SwiftWebVC: UIViewController {
     override public func loadView() {
         view = webView
         loadRequest(request)
-    }
-    
-    override public func viewDidLoad() {
-        super.viewDidLoad()
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -239,7 +235,7 @@ public class SwiftWebVC: UIViewController {
     
     ////////////////////////////////////////////////
     
-    @objc func doneButtonTapped() {
+    @objc open func doneButtonTapped() {
         closing = true
         UINavigationBar.appearance().barStyle = storedStatusColor!
         self.dismiss(animated: true, completion: nil)
@@ -250,7 +246,7 @@ public class SwiftWebVC: UIViewController {
     /// Helper function to get image within SwiftWebVCResources bundle
     ///
     /// - parameter named: The name of the image in the SwiftWebVCResources bundle
-    class func bundledImage(named: String) -> UIImage? {
+    open class func bundledImage(named: String) -> UIImage? {
         let image = UIImage(named: named)
         if image == nil {
             return UIImage(named: named, in: Bundle(for: SwiftWebVC.classForCoder()), compatibleWith: nil)
