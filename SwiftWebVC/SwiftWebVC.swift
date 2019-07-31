@@ -49,14 +49,6 @@ public class SwiftWebVC: UIViewController {
         return tempRefreshBarButtonItem
     }()
     
-    lazy var stopBarButtonItem: UIBarButtonItem = {
-        var tempStopBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.stop,
-                                                    target: self,
-                                                    action: #selector(SwiftWebVC.stopTapped(_:)))
-        tempStopBarButtonItem.tintColor = self.buttonColor
-        return tempStopBarButtonItem
-    }()
-    
     lazy var actionBarButtonItem: UIBarButtonItem = {
         var tempActionBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action,
                                                       target: self,
@@ -144,6 +136,7 @@ public class SwiftWebVC: UIViewController {
         navBarTitle.shadowOffset = CGSize(width: 0, height: 1);
         navBarTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 17.0)
         navBarTitle.textAlignment = .center
+        navBarTitle.text = "Loading"
         navigationItem.titleView = navBarTitle;
         
         super.viewWillAppear(true)
@@ -175,35 +168,20 @@ public class SwiftWebVC: UIViewController {
     func updateToolbarItems() {
         backBarButtonItem.isEnabled = webView.canGoBack
         forwardBarButtonItem.isEnabled = webView.canGoForward
-        
-        let refreshStopBarButtonItem: UIBarButtonItem = webView.isLoading ? stopBarButtonItem : refreshBarButtonItem
+        refreshBarButtonItem.isEnabled = !webView.isLoading
         
         let fixedSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
         let flexibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
-            
-            let toolbarWidth: CGFloat = 250.0
             fixedSpace.width = 35.0
             
-            let items: NSArray = sharingEnabled ? [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshStopBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
+            let items: NSArray = sharingEnabled ? [fixedSpace, refreshBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
             
-            let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0.0, y: 0.0, width: toolbarWidth, height: 44.0))
-            if !closing {
-                toolbar.items = items as? [UIBarButtonItem]
-                if presentingViewController == nil {
-                    toolbar.barTintColor = navigationController!.navigationBar.barTintColor
-                }
-                else {
-                    toolbar.barStyle = navigationController!.navigationBar.barStyle
-                }
-                toolbar.tintColor = navigationController!.navigationBar.tintColor
-            }
             navigationItem.rightBarButtonItems = items.reverseObjectEnumerator().allObjects as? [UIBarButtonItem]
-            
         }
         else {
-            let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, flexibleSpace, actionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace, refreshStopBarButtonItem, fixedSpace]
+            let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem, flexibleSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace]
             
             if let navigationController = navigationController, !closing {
                 if presentingViewController == nil {
@@ -213,7 +191,9 @@ public class SwiftWebVC: UIViewController {
                     navigationController.toolbar.barStyle = navigationController.navigationBar.barStyle
                 }
                 navigationController.toolbar.tintColor = navigationController.navigationBar.tintColor
+                
                 toolbarItems = items as? [UIBarButtonItem]
+                navigationItem.rightBarButtonItem = refreshBarButtonItem
             }
         }
     }
@@ -232,11 +212,6 @@ public class SwiftWebVC: UIViewController {
     
     @objc func reloadTapped(_ sender: UIBarButtonItem) {
         webView.reload()
-    }
-    
-    @objc func stopTapped(_ sender: UIBarButtonItem) {
-        webView.stopLoading()
-        updateToolbarItems()
     }
     
     @objc func actionButtonTapped(_ sender: AnyObject) {
