@@ -147,8 +147,10 @@ public class SwiftWebVC: UIViewController {
         else {
             navBarTitle.textColor = self.titleColor
         }
-        navBarTitle.shadowOffset = CGSize(width: 0, height: 1);
-        navBarTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 17.0)
+        navBarTitle.shadowOffset = CGSize(width: 0, height: 1)
+        if navBarTitle.font == nil {
+            navBarTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 17.0)
+        }
         navBarTitle.textAlignment = .center
         navBarTitle.text = "Loading"
         navigationItem.titleView = navBarTitle;
