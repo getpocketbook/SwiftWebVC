@@ -11,6 +11,7 @@ import WebKit
 public protocol SwiftWebVCDelegate: class {
     func didStartLoading()
     func didFinishLoading(success: Bool)
+    func didWideActionButtonTapped()
 }
 
 public class SwiftWebVC: UIViewController {
@@ -57,6 +58,30 @@ public class SwiftWebVC: UIViewController {
         return tempActionBarButtonItem
     }()
     
+    lazy var wideActionBarButtonItem: UIBarButtonItem = {
+        var tempWideActionBar = UIBarButtonItem(customView: wideActionButton)
+        return tempWideActionBar
+    }()
+    
+    public lazy var wideActionButton: UIButton = {
+        // Jie - Example to use attributed string
+//        let fullString = NSMutableAttributedString(string: "VIEW CASHBACK INFO      ", attributes: [.font: UIFont.systemFont(ofSize: 13), NSAttributedString.Key.foregroundColor: UIColor.white])
+//        let imageAttachment = NSTextAttachment()
+//        imageAttachment.image = UIImage(named: "SwiftWebVCViewMoreCollapsed")
+//        let imageString = NSMutableAttributedString(attachment: imageAttachment)
+//        imageString.addAttribute(NSAttributedString.Key.baselineOffset, value: 2, range: NSRange(location: 0, length: imageString.length))
+//        fullString.append(imageString)
+        
+        let tempButton = UIButton()
+        tempButton.frame = CGRect(x: 0, y: 0, width: 206, height: 30)
+        tempButton.backgroundColor = UIColor(hexString: "#d71377")
+        tempButton.layer.cornerRadius = 17
+        tempButton.layer.masksToBounds = true
+//        tempButton.setAttributedTitle(fullString, for: .normal)
+        tempButton.addTarget(self, action: #selector(wideActionButtonTapped(_:)), for: .touchUpInside)
+        
+        return tempButton
+    }()
     
     lazy var webView: WKWebView = {
         var tempWebView = WKWebView(frame: UIScreen.main.bounds)
@@ -172,12 +197,15 @@ public class SwiftWebVC: UIViewController {
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
             fixedSpace.width = 35.0
             
-            let items: NSArray = sharingEnabled ? [fixedSpace, refreshBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem] : [fixedSpace, refreshBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem]
+            let items: NSArray = sharingEnabled ? [fixedSpace, refreshBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem, fixedSpace, wideActionBarButtonItem] : [fixedSpace, refreshBarButtonItem, fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, wideActionBarButtonItem]
             
             navigationItem.rightBarButtonItems = items.reverseObjectEnumerator().allObjects as? [UIBarButtonItem]
         }
         else {
-            let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, fixedSpace, forwardBarButtonItem, fixedSpace, actionBarButtonItem, flexibleSpace] : [fixedSpace, backBarButtonItem, flexibleSpace, forwardBarButtonItem, flexibleSpace]
+            let fixedSpace3: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
+            fixedSpace3.width = 40
+            
+            let items: NSArray = sharingEnabled ? [fixedSpace, backBarButtonItem, fixedSpace3, forwardBarButtonItem, fixedSpace, actionBarButtonItem, fixedSpace, wideActionBarButtonItem, fixedSpace] : [fixedSpace, backBarButtonItem, fixedSpace3, forwardBarButtonItem, flexibleSpace, wideActionBarButtonItem, fixedSpace]
             
             if let navigationController = navigationController, !closing {
                 if presentingViewController == nil {
@@ -231,6 +259,10 @@ public class SwiftWebVC: UIViewController {
                 present(activityController, animated: true, completion: nil)
             }
         }
+    }
+    
+    @objc func wideActionButtonTapped(_ sender: AnyObject) {
+        delegate?.didWideActionButtonTapped()
     }
     
     ////////////////////////////////////////////////
@@ -348,6 +380,38 @@ extension SwiftWebVC: UIScrollViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
+}
+
+// MARK: Extension for built-in UIColor
+extension UIColor {
+    
+    /// Creates an UIColor from HEX String in "#363636" format
+    ///
+    /// - parameter hexString: HEX String in "#363636" format
+    /// - returns: UIColor from HexString
+    convenience init(hexString: String) {
+        let hexString: String = (hexString as NSString).trimmingCharacters(in: .whitespacesAndNewlines)
+        let scanner           = Scanner(string: hexString as String)
+        
+        if hexString.hasPrefix("#") {
+            scanner.scanLocation = 1
+        }
+        
+        var color: UInt32 = 0
+        scanner.scanHexInt32(&color)
+        
+        let mask = 0x000000FF
+        let r = Int(color >> 16) & mask
+        let g = Int(color >> 8) & mask
+        let b = Int(color) & mask
+        
+        let red   = CGFloat(r) / 255.0
+        let green = CGFloat(g) / 255.0
+        let blue  = CGFloat(b) / 255.0
+        
+        self.init(red: red, green: green, blue: blue, alpha: 1)
     }
     
 }
