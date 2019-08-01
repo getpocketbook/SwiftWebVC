@@ -64,20 +64,11 @@ public class SwiftWebVC: UIViewController {
     }()
     
     public lazy var wideActionButton: UIButton = {
-        // Jie - Example to use attributed string
-//        let fullString = NSMutableAttributedString(string: "VIEW CASHBACK INFO      ", attributes: [.font: UIFont.systemFont(ofSize: 13), NSAttributedString.Key.foregroundColor: UIColor.white])
-//        let imageAttachment = NSTextAttachment()
-//        imageAttachment.image = UIImage(named: "SwiftWebVCViewMoreCollapsed")
-//        let imageString = NSMutableAttributedString(attachment: imageAttachment)
-//        imageString.addAttribute(NSAttributedString.Key.baselineOffset, value: 2, range: NSRange(location: 0, length: imageString.length))
-//        fullString.append(imageString)
-        
         let tempButton = UIButton()
         tempButton.frame = CGRect(x: 0, y: 0, width: 206, height: 30)
         tempButton.backgroundColor = UIColor(hexString: "#d71377")
-        tempButton.layer.cornerRadius = 17
+        tempButton.layer.cornerRadius = 15
         tempButton.layer.masksToBounds = true
-//        tempButton.setAttributedTitle(fullString, for: .normal)
         tempButton.addTarget(self, action: #selector(wideActionButtonTapped(_:)), for: .touchUpInside)
         
         return tempButton
@@ -93,7 +84,10 @@ public class SwiftWebVC: UIViewController {
     
     var request: URLRequest!
     
-    var navBarTitle: UILabel!
+    public lazy var navBarTitle: UILabel = {
+        var tempNavBarTitle = UILabel()
+        return tempNavBarTitle
+    }()
     
     public var sharingEnabled = true
     
@@ -144,7 +138,6 @@ public class SwiftWebVC: UIViewController {
         assert(self.navigationController != nil, "SVWebViewController needs to be contained in a UINavigationController. If you are presenting SVWebViewController modally, use SVModalWebViewController instead.")
         
         updateToolbarItems()
-        navBarTitle = UILabel()
         navBarTitle.backgroundColor = UIColor.clear
         if presentingViewController == nil {
             if let titleAttributes = navigationController!.navigationBar.titleTextAttributes {

@@ -58,4 +58,8 @@ extension ViewController: SwiftWebVCDelegate {
     func didFinishLoading(success: Bool) {
         print("Finished loading. Success: \(success).")
     }
+    
+    func didWideActionButtonTapped() {
+        print("Wide Action Button tapped.")
+    }
 }
