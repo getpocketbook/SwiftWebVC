@@ -301,8 +301,8 @@ extension SwiftWebVC: WKNavigationDelegate {
         self.delegate?.didFinishLoading(success: true)
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
         
-        webView.evaluateJavaScript("document.title", completionHandler: { [unowned self] (response, error) in
-            self.navBarTitle.text = self.request.url?.host
+        webView.evaluateJavaScript("document.title", completionHandler: { [unowned self, unowned webView] (response, error) in
+            self.navBarTitle.text = webView.url?.host
             self.navBarTitle.sizeToFit()
             self.updateToolbarItems()
         })
