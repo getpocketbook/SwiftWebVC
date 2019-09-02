@@ -19,6 +19,7 @@
 		00FFF85E1E09977500015C59 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00FFF85C1E09977500015C59 /* Main.storyboard */; };
 		00FFF8601E09977500015C59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00FFF85F1E09977500015C59 /* Assets.xcassets */; };
 		00FFF8631E09977500015C59 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00FFF8611E09977500015C59 /* LaunchScreen.storyboard */; };
+		6845A66C230D1DA900D14BDE /* SwiftUIWebVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6845A66B230D1DA900D14BDE /* SwiftUIWebVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		00FFF85F1E09977500015C59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00FFF8621E09977500015C59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		00FFF8641E09977500015C59 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6845A66B230D1DA900D14BDE /* SwiftUIWebVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIWebVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,13 +64,14 @@
 		0055F7911E259F1A000ECD54 /* SwiftWebVC */ = {
 			isa = PBXGroup;
 			children = (
-				0055F7921E259F1A000ECD54 /* Resources */,
-				0055F7941E259F1A000ECD54 /* Strings */,
 				0055F7A11E259F1A000ECD54 /* SwiftModalWebVC.swift */,
+				6845A66B230D1DA900D14BDE /* SwiftUIWebVC.swift */,
 				0055F7A21E259F1A000ECD54 /* SwiftWebVC.swift */,
 				0055F7A31E259F1A000ECD54 /* SwiftWebVCActivity.swift */,
 				0055F7A41E259F1A000ECD54 /* SwiftWebVCActivityChrome.swift */,
 				0055F7A51E259F1A000ECD54 /* SwiftWebVCActivitySafari.swift */,
+				0055F7921E259F1A000ECD54 /* Resources */,
+				0055F7941E259F1A000ECD54 /* Strings */,
 			);
 			name = SwiftWebVC;
 			path = ../SwiftWebVC;
@@ -214,6 +217,7 @@
 				00FFF8591E09977500015C59 /* AppDelegate.swift in Sources */,
 				0055F7A91E259F1A000ECD54 /* SwiftWebVC.swift in Sources */,
 				0055F7AA1E259F1A000ECD54 /* SwiftWebVCActivity.swift in Sources */,
+				6845A66C230D1DA900D14BDE /* SwiftUIWebVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
