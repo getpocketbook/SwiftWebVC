@@ -286,6 +286,7 @@ public class SwiftWebVC: UIViewController {
         return image
     }
     
+    // MARK - Javascript cookie sync
     // sync cookies by js using document.cookie
     fileprivate func syncCookiesInJS() -> WKUserScript! {
         var script: String = ""
