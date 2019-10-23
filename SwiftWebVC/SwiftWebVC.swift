@@ -75,7 +75,12 @@ public class SwiftWebVC: UIViewController {
     }()
     
     lazy var webView: WKWebView = {
-        var tempWebView = WKWebView(frame: UIScreen.main.bounds)
+
+        let webConfiguration = WKWebViewConfiguration()
+        let contentController = WKUserContentController()
+                webConfiguration.userContentController = contentController
+        
+        var tempWebView = WKWebView(frame: UIScreen.main.bounds, configuration: webConfiguration)
         tempWebView.uiDelegate = self
         tempWebView.navigationDelegate = self
         tempWebView.scrollView.delegate = self
@@ -281,6 +286,36 @@ public class SwiftWebVC: UIViewController {
         return image
     }
     
+    // MARK - Javascript cookie sync
+    // sync cookies by js using document.cookie
+    fileprivate func syncCookiesInJS() -> WKUserScript! {
+        var script: String = ""
+        if let cookies = HTTPCookieStorage.shared.cookies {
+            script = getJSCookiesString(cookies)
+        }
+        return WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+    }
+    
+    // composite document.cookie
+    fileprivate func getJSCookiesString(_ cookies: [HTTPCookie]) -> String {
+        var result = ""
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        dateFormatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss zzz"
+        
+        for cookie in cookies {
+            result += "document.cookie='\(cookie.name)=\(cookie.value); domain=\(cookie.domain); path=\(cookie.path); "
+            if let date = cookie.expiresDate {
+                result += "expires=\(dateFormatter.string(from: date)); "
+            }
+            if (cookie.isSecure) {
+                result += "secure; "
+            }
+            result += "'; "
+        }
+        return result
+    }
+    
 }
 
 extension SwiftWebVC: WKUIDelegate {
@@ -290,8 +325,9 @@ extension SwiftWebVC: WKUIDelegate {
 }
 
 extension SwiftWebVC: WKNavigationDelegate {
-    
+        
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+ 
         self.delegate?.didStartLoading()
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         updateToolbarItems()
@@ -307,6 +343,8 @@ extension SwiftWebVC: WKNavigationDelegate {
             self.updateToolbarItems()
         })
         
+        webView.configuration.userContentController.removeAllUserScripts()
+        webView.configuration.userContentController.addUserScript(self.syncCookiesInJS())
     }
     
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
